@@ -11,6 +11,7 @@ spec:
   selector:
     matchLabels:
       {{- include "fastapiapp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: app
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,6 +20,7 @@ spec:
       {{- end }}
       labels:
         {{- include "fastapiapp.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: app
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -37,14 +39,23 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          env:
+            - name: DATABASE_URI
+              value: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ include "fastapiapp.fullname" . }}-postgres:5432/{{ .Values.postgres.database }}"
+            {{- if .Values.castServiceHostUrl }}
+            - name: CAST_SERVICE_HOST_URL
+              value: {{ .Values.castServiceHostUrl | quote }}
+            {{- end }}
           livenessProbe:
-            httpGet:
-              path: /api/v1/checkapi
+            tcpSocket:
               port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /api/v1/checkapi
+            tcpSocket:
               port: http
+            initialDelaySeconds: 15
+            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

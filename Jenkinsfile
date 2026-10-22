@@ -78,12 +78,21 @@ stages {
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_MOVIE_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install movie ./charts --values=values.yml --namespace dev --set service.nodePort=$NODEPORT_MOVIE_DEV
+      helm upgrade --install movie ./charts --values=values.yml --namespace dev \
+        --set service.nodePort=$NODEPORT_MOVIE_DEV \
+        --set postgres.user=movie_db_username \
+        --set postgres.password=movie_db_password \
+        --set postgres.database=movie_db_dev \
+        --set castServiceHostUrl=http://cast-fastapiapp/api/v1/casts/
 
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_CAST_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install cast ./charts --values=values.yml --namespace dev --set service.nodePort=$NODEPORT_CAST_DEV
+      helm upgrade --install cast ./charts --values=values.yml --namespace dev \
+        --set service.nodePort=$NODEPORT_CAST_DEV \
+        --set postgres.user=cast_db_username \
+        --set postgres.password=cast_db_password \
+        --set postgres.database=cast_db_dev
       
       '''
       }
@@ -104,12 +113,21 @@ stages {
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_MOVIE_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install movie ./charts --values=values.yml --namespace qa --set service.nodePort=$NODEPORT_MOVIE_QA
+      helm upgrade --install movie ./charts --values=values.yml --namespace qa \
+        --set service.nodePort=$NODEPORT_MOVIE_QA \
+        --set postgres.user=movie_db_username \
+        --set postgres.password=movie_db_password \
+        --set postgres.database=movie_db_dev \
+        --set castServiceHostUrl=http://cast-fastapiapp/api/v1/casts/
 
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_CAST_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install cast ./charts --values=values.yml --namespace qa --set service.nodePort=$NODEPORT_CAST_QA
+      helm upgrade --install cast ./charts --values=values.yml --namespace qa \
+        --set service.nodePort=$NODEPORT_CAST_QA \
+        --set postgres.user=cast_db_username \
+        --set postgres.password=cast_db_password \
+        --set postgres.database=cast_db_dev
       
       '''
       }
@@ -130,12 +148,21 @@ stages {
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_MOVIE_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install movie ./charts --values=values.yml --namespace staging --set service.nodePort=$NODEPORT_MOVIE_STAGING
+      helm upgrade --install movie ./charts --values=values.yml --namespace staging \
+        --set service.nodePort=$NODEPORT_MOVIE_STAGING \
+        --set postgres.user=movie_db_username \
+        --set postgres.password=movie_db_password \
+        --set postgres.database=movie_db_dev \
+        --set castServiceHostUrl=http://cast-fastapiapp/api/v1/casts/
 
       cp charts/values.yaml values.yml
       sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_CAST_IMAGE}+g" values.yml
       sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-      helm upgrade --install cast ./charts --values=values.yml --namespace staging --set service.nodePort=$NODEPORT_CAST_STAGING
+      helm upgrade --install cast ./charts --values=values.yml --namespace staging \
+        --set service.nodePort=$NODEPORT_CAST_STAGING \
+        --set postgres.user=cast_db_username \
+        --set postgres.password=cast_db_password \
+        --set postgres.database=cast_db_dev
       
       '''
       }
@@ -166,12 +193,21 @@ stages {
           cp charts/values.yaml values.yml
           sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_MOVIE_IMAGE}+g" values.yml
           sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-          helm upgrade --install movie ./charts --values=values.yml --namespace prod --set service.nodePort=$NODEPORT_MOVIE_PROD
+          helm upgrade --install movie ./charts --values=values.yml --namespace prod \
+            --set service.nodePort=$NODEPORT_MOVIE_PROD \
+            --set postgres.user=movie_db_username \
+            --set postgres.password=movie_db_password \
+            --set postgres.database=movie_db_dev \
+            --set castServiceHostUrl=http://cast-fastapiapp/api/v1/casts/
 
           cp charts/values.yaml values.yml
           sed -i "s+repository:.*+repository: ${DOCKER_ID}/${DOCKER_CAST_IMAGE}+g" values.yml
           sed -i "s+tag:.*+tag: \"${DOCKER_TAG}\"+g" values.yml
-          helm upgrade --install cast ./charts --values=values.yml --namespace prod --set service.nodePort=$NODEPORT_CAST_PROD
+          helm upgrade --install cast ./charts --values=values.yml --namespace prod \
+            --set service.nodePort=$NODEPORT_CAST_PROD \
+            --set postgres.user=cast_db_username \
+            --set postgres.password=cast_db_password \
+            --set postgres.database=cast_db_dev
           
           '''
         }
