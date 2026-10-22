@@ -26,6 +26,7 @@ stages {
     steps {
       script {
       sh '''
+      docker rm -f cast-service movie-service || true
       docker run -d -p 8001:8000 --name cast-service $DOCKER_ID/$DOCKER_CAST_IMAGE:$DOCKER_TAG
       docker run -d -p 8002:8000 --name movie-service $DOCKER_ID/$DOCKER_MOVIE_IMAGE:$DOCKER_TAG
       sleep 10
