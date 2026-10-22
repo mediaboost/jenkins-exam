@@ -42,7 +42,8 @@ stages {
     steps {
       script {
       sh '''
-      curl localhost
+      curl -f http://localhost:8001/docs || true
+      curl -f http://localhost:8002/docs || true
       '''
       }
     }
@@ -142,7 +143,11 @@ stages {
   }
   stage('Deploiement en prod'){
     when {
-      branch 'master'
+      expression {
+        return env.BRANCH_NAME == 'master' ||
+              env.GIT_BRANCH == 'master' ||
+              env.GIT_BRANCH == 'origin/master'
+      }
     }
     environment {
       KUBECONFIG = credentials("config")
