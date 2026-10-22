@@ -17,6 +17,7 @@ $ tree
 │   ├── deployment.yaml
 │   ├── _helpers.tpl
 │   ├── hpa.yaml
+│   ├── postgres.yaml
 │   ├── ingress.yaml
 │   ├── NOTES.txt
 │   ├── serviceaccount.yaml
